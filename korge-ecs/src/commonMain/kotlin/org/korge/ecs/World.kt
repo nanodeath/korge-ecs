@@ -12,7 +12,13 @@ class World {
     var processing: Boolean = false
         private set
 
-    fun createEntity(cb: EntityBuilder.() -> Unit = {}): Int {
+    fun createEntity(): Int {
+        val idx = ++entityCounter
+        entityIndexes.add(idx)
+        return idx
+    }
+
+    fun createEntity(cb: EntityBuilder.() -> Unit): Int {
         val idx = ++entityCounter
         cb(EntityBuilder(idx, this))
         entityIndexes.add(idx)

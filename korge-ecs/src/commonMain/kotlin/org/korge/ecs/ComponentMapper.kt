@@ -2,25 +2,32 @@ package org.korge.ecs
 
 import com.soywiz.kds.IntArrayList
 
-class ComponentMapper<T : Component>(private val world: World) {
+/**
+ * ComponentMappers let you efficiently look up, add, and remove the corresponding [Component] instance for a given
+ * entity.
+ *
+ * You acquire them using [World.componentMapperFor], and it's strongly recommended to cache the [ComponentMapper]
+ * rather than retrieving it every tick.
+ */
+class ComponentMapper<T : Component> internal constructor(private val world: World) {
     private val components = HashMap<Int, T>()
     internal val addEntities = IntArrayList()
     internal val addComponents = ArrayList<T>()
     internal val removeEntities = IntArrayList()
 
-    operator fun get(idx: Int): T? = components[idx]
+    operator fun get(entity: Int): T? = components[entity]
 
-    fun addComponent(entity: Int, c: T) {
+    fun addComponent(entity: Int, component: T) {
         if (world.processing) {
             addEntities.add(entity)
-            addComponents.add(c)
+            addComponents.add(component)
         } else {
-            actuallyAddComponent(entity, c)
+            actuallyAddComponent(entity, component)
         }
     }
 
-    internal fun actuallyAddComponent(entity: Int, c: T) {
-        if (components.put(entity, c) == null) {
+    internal fun actuallyAddComponent(entity: Int, component: T) {
+        if (components.put(entity, component) == null) {
             world.componentAdded(entity)
         } else {
             // Just overwrote a mapping?
@@ -43,16 +50,16 @@ class ComponentMapper<T : Component>(private val world: World) {
         }
     }
 
-    fun hasEntity(idx: Int): Boolean = components[idx] != null
+    fun hasEntity(entity: Int): Boolean = entity in components
 
-    fun destroy(idx: Int) {
-        destroy(idx, notifyWorld = true)
+    fun destroy(entity: Int) {
+        destroy(entity, notifyWorld = true)
     }
 
-    internal fun destroy(idx: Int, notifyWorld: Boolean) {
-        if (components.remove(idx) != null) {
+    internal fun destroy(entity: Int, notifyWorld: Boolean) {
+        if (components.remove(entity) != null) {
             if (notifyWorld) {
-                world.componentRemoved(idx)
+                world.componentRemoved(entity)
             }
         }
     }
