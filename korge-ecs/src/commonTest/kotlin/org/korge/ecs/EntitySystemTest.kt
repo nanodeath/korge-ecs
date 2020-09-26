@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class EntitySystemTest {
     @Test
-    fun `tick processes entities`() {
+    fun tickProcessesEntities() {
         var executions = 0
         val world = World()
         object : EntitySystem(world) {

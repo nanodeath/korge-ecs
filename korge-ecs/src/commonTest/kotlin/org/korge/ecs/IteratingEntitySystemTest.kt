@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 
 class IteratingEntitySystemTest {
     @Test
-    fun `iterates through all entities`() {
+    fun iteratesThroughAllEntities() {
         val world = World()
         object : IteratingEntitySystem(world) {
             override fun processEntity(dt: TimeSpan, idx: Int) {
@@ -21,7 +21,7 @@ class IteratingEntitySystemTest {
     }
 
     @Test
-    fun `can remove while iterating`() {
+    fun canRemoveWhileIterating() {
         val world = World()
         world.registerComponentType<ComponentA>()
         val componentAMapper = world.componentMapperFor<ComponentA>()

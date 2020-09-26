@@ -6,14 +6,14 @@ import kotlin.test.assertTrue
 
 class WorldTest {
     @Test
-    fun `can create an entity`() {
+    fun canCreateAnEntity() {
         val world = World()
         val entity = world.createEntity {  }
         assertTrue(world.entities.contains(entity), "world contains $entity")
     }
 
     @Test
-    fun `can get components`() {
+    fun canGetComponents() {
         val world = World()
         world.registerComponentType<ComponentA>()
         val entity = world.createEntity {
