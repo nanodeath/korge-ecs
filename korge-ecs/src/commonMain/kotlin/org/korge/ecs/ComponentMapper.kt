@@ -15,7 +15,8 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
     internal val addComponents = ArrayList<T>()
     internal val removeEntities = IntArrayList()
 
-    operator fun get(entity: Int): T? = components[entity]
+    operator fun get(entity: Int): T = components[entity]!!
+    fun tryGet(entity: Int): T? = components[entity]
 
     fun addComponent(entity: Int, component: T) {
         if (world.processing) {

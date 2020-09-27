@@ -19,7 +19,7 @@ abstract class IteratingEntitySystem(
     /**
      * Process a single entity that has the required components.
      */
-    abstract fun processEntity(dt: TimeSpan, idx: Int)
+    abstract fun processEntity(dt: TimeSpan, entity: Int)
 
     override fun processEntities(dt: TimeSpan, entities: Set<Int>) {
         query.entities.forEach { entityIdx -> processEntity(dt, entityIdx) }

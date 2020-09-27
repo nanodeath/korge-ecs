@@ -10,8 +10,8 @@ class IteratingEntitySystemTest {
     fun iteratesThroughAllEntities() {
         val world = World()
         object : IteratingEntitySystem(world) {
-            override fun processEntity(dt: TimeSpan, idx: Int) {
-                assertTrue(idx in 0..2)
+            override fun processEntity(dt: TimeSpan, entity: Int) {
+                assertTrue(entity in 0..2)
             }
         }
         world.createEntity()
@@ -27,11 +27,11 @@ class IteratingEntitySystemTest {
         val componentAMapper = world.componentMapperFor<ComponentA>()
         val processed = mutableListOf<Int>()
         object : IteratingEntitySystem(world, ComponentA::class) {
-            override fun processEntity(dt: TimeSpan, idx: Int) {
-                if (idx % 2 == 0) {
-                    componentAMapper.removeComponent(idx)
+            override fun processEntity(dt: TimeSpan, entity: Int) {
+                if (entity % 2 == 0) {
+                    componentAMapper.removeComponent(entity)
                 }
-                processed.add(idx)
+                processed.add(entity)
             }
         }
         repeat(5) {
