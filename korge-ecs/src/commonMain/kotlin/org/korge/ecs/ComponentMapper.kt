@@ -1,6 +1,7 @@
 package org.korge.ecs
 
 import com.soywiz.kds.IntArrayList
+import kotlin.reflect.KClass
 
 /**
  * ComponentMappers let you efficiently look up, add, and remove the corresponding [Component] instance for a given
@@ -9,13 +10,13 @@ import com.soywiz.kds.IntArrayList
  * You acquire them using [World.componentMapperFor], and it's strongly recommended to cache the [ComponentMapper]
  * rather than retrieving it every tick.
  */
-class ComponentMapper<T : Component> internal constructor(private val world: World) {
+class ComponentMapper<T : Component> internal constructor(private val world: World, private val componentType: KClass<T>) {
     private val components = HashMap<Int, T>()
     internal val addEntities = IntArrayList()
     internal val addComponents = ArrayList<T>()
     internal val removeEntities = IntArrayList()
 
-    operator fun get(entity: Int): T = components[entity]!!
+    operator fun get(entity: Int): T = components[entity] ?: throw IllegalArgumentException("Entity $entity does not have a $componentType")
     fun tryGet(entity: Int): T? = components[entity]
 
     fun addComponent(entity: Int, component: T) {

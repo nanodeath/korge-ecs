@@ -25,9 +25,8 @@ class World {
         return idx
     }
 
-    fun registerComponentType(componentClass: KClass<out Component>) {
-        val componentMapper = ComponentMapper<Component>(this)
-        componentMappers[componentClass] = componentMapper
+    fun <T : Component> registerComponentType(componentClass: KClass<T>) {
+        componentMappers[componentClass] = ComponentMapper(this, componentClass)
     }
 
     fun registerSystem(system: System) {
