@@ -3,6 +3,7 @@ package org.korge.ecs
 import com.soywiz.klock.TimeSpan
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class EntitySystemTest {
     @Test
@@ -13,7 +14,9 @@ class EntitySystemTest {
             override fun processEntities(dt: TimeSpan, entities: Set<Int>) {
                 executions++
                 assertEquals(TimeSpan(16.6), dt)
-                assertEquals(setOf(1, 2, 3), entities)
+                assertTrue(entities.contains(1))
+                assertTrue(entities.contains(2))
+                assertTrue(entities.contains(3))
             }
         }
         world.createEntity()
