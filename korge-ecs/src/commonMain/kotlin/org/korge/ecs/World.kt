@@ -15,6 +15,7 @@ class World {
     fun createEntity(): Int {
         val idx = ++entityCounter
         entityIndexes.add(idx)
+        queries.forEach { it.offer(idx) }
         return idx
     }
 
@@ -22,6 +23,7 @@ class World {
         val idx = ++entityCounter
         cb(EntityBuilder(idx, this))
         entityIndexes.add(idx)
+        queries.forEach { it.offer(idx) }
         return idx
     }
 

@@ -25,7 +25,7 @@ class Query internal constructor(private val world: World, vararg components: KC
     }
 
     internal fun offer(entity: Int, removeIfApplicable: Boolean = false) {
-        if (componentMappers.all { it.hasEntity(entity) }) {
+        if (componentMappers.isEmpty() || componentMappers.all { it.hasEntity(entity) }) {
             internalEntities.add(entity)
         } else if (removeIfApplicable) {
             internalEntities.remove(entity)

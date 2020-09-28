@@ -11,7 +11,7 @@ class IteratingEntitySystemTest {
         val world = World()
         object : IteratingEntitySystem(world) {
             override fun processEntity(dt: TimeSpan, entity: Int) {
-                assertTrue(entity in 0..2)
+                assertTrue(entity in 1..3, "entity was $entity")
             }
         }
         world.createEntity()
