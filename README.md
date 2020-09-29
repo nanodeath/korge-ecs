@@ -9,6 +9,12 @@ There's a tiny "sample game" available at [korge-ecs-sample](https://github.com/
 
 # Getting Started
 
+## Dependencies
+
+Head over to [bintray](https://bintray.com/nanodeath/korge/korge-ecs) and hit `SET ME UP!` for repo setup instructions.
+Then scroll down to the `build settings` section for your toolchain, e.g. Gradle, which will include directions and a
+version. You only need a single dependency on one package -- `korge-ecs`.
+
 ## World
 
 First you need to define a `World`. The World contains all entities, components, and systems inside it; you'll likely
