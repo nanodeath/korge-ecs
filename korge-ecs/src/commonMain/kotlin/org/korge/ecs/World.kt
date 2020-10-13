@@ -53,6 +53,7 @@ class World {
             }
             mapper.addEntities.clear()
             mapper.addComponents.clear()
+            mapper.removeEntities.clear()
         }
     }
 
