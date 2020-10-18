@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
  * rather than retrieving it every tick.
  */
 class ComponentMapper<T : Component> internal constructor(private val world: World, private val componentType: KClass<T>) {
-    private val components = HashMap<Int, T>()
+    private val components = HashMap<Entity, T>()
     internal val addEntities = IntArrayList()
     internal val addComponents = ArrayList<T>()
     internal val removeEntities = IntArrayList()
@@ -22,14 +22,14 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
      * @throws IllegalArgumentException if the entity doesn't have a component of this type attached.
      * @return a valid component
      */
-    operator fun get(entity: Int): T = components[entity] ?: throw IllegalArgumentException("Entity $entity does not have a $componentType")
+    operator fun get(entity: Entity): T = components[entity] ?: throw IllegalArgumentException("Entity $entity does not have a $componentType")
 
     /**
      * Retrieves the component data of type [T] associated with [entity] if [entity] has a component of this type.
      *
      * @return a valid component, or null if the entity didn't have a component of this type.
      */
-    fun tryGet(entity: Int): T? = components[entity]
+    fun tryGet(entity: Entity): T? = components[entity]
 
     /**
      * Adds the provided [component] data to the given [entity].
@@ -39,7 +39,7 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
      *
      * If a component of type [T] already exists on [entity], the existing component will be overwritten.
      */
-    fun addComponent(entity: Int, component: T) {
+    fun addComponent(entity: Entity, component: T) {
         if (world.processing) {
             addEntities.add(entity)
             addComponents.add(component)
@@ -48,7 +48,7 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
         }
     }
 
-    internal fun actuallyAddComponent(entity: Int, component: T) {
+    internal fun actuallyAddComponent(entity: Entity, component: T) {
         if (components.put(entity, component) == null) {
             world.componentAdded(entity)
         } else {
@@ -64,7 +64,7 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
      *
      * If no component of type [T] exists on [entity], this method does nothing.
      */
-    fun removeComponent(entity: Int) {
+    fun removeComponent(entity: Entity) {
         if (world.processing) {
             removeEntities.add(entity)
         } else {
@@ -72,7 +72,7 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
         }
 
     }
-    internal fun actuallyRemoveComponent(entity: Int) {
+    internal fun actuallyRemoveComponent(entity: Entity) {
         if (components.remove(entity) != null) {
             world.componentRemoved(entity)
         } else {
@@ -87,9 +87,9 @@ class ComponentMapper<T : Component> internal constructor(private val world: Wor
      *
      * @return true if this [ComponentMapper] currently has data that can be retrieved using [get].
      */
-    fun hasEntity(entity: Int): Boolean = entity in components
+    fun hasEntity(entity: Entity): Boolean = entity in components
 
-    internal fun destroy(entity: Int, notifyWorld: Boolean) {
+    internal fun destroy(entity: Entity, notifyWorld: Boolean) {
         if (components.remove(entity) != null) {
             if (notifyWorld) {
                 world.componentRemoved(entity)

@@ -20,6 +20,6 @@ class WorldTest {
             addComponent(ComponentA(3))
         }
         val componentA = world.componentMapperFor<ComponentA>()[entity]
-        assertEquals(3, componentA?.counter)
+        assertEquals(3, componentA.counter)
     }
 }

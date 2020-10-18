@@ -10,29 +10,36 @@ import kotlin.reflect.KClass
  * For that reason, it's important to [close] queries when done with them, and [EntitySystems][EntitySystem] that use
  * them.
  */
-class Query internal constructor(private val world: World, vararg components: KClass<out Component>) : Closeable {
-    private val componentMappers: List<ComponentMapper<out Component>> = components.map { world.componentMapperFor(it) }
+class Query internal constructor(
+    private val world: World,
+    requiredComponents: Set<KClass<out Component>> = emptySet(),
+    excludedComponents: Set<KClass<out Component>> = emptySet()
+) : Closeable {
+    private val required: List<ComponentMapper<out Component>> = requiredComponents.map { world.componentMapperFor(it) }
+    // Excluded is not fully supported yet
+    private val excluded: List<ComponentMapper<out Component>> = excludedComponents.map { world.componentMapperFor(it) }
     private val internalEntities = IntSet()
 
-    init {
-        world.registerQuery(this)
-    }
-
-    val entities: Set<Int> get() = internalEntities
+    val entities: Set<Entity> get() = internalEntities
 
     override fun close() {
         world.unregisterQuery(this)
     }
 
-    internal fun offer(entity: Int, removeIfApplicable: Boolean = false) {
-        if (componentMappers.isEmpty() || componentMappers.all { it.hasEntity(entity) }) {
+    internal fun offer(entity: Entity, removeIfApplicable: Boolean = false) {
+        if (requiredMatch(entity)) {
             internalEntities.add(entity)
         } else if (removeIfApplicable) {
             internalEntities.remove(entity)
         }
     }
 
-    internal fun forget(entity: Int) {
+    private fun requiredMatch(entity: Entity): Boolean {
+        // returns true if [required] is empty.
+        return required.all { it.hasEntity(entity) }
+    }
+
+    internal fun forget(entity: Entity) {
         internalEntities.remove(entity)
     }
 }

@@ -9,15 +9,15 @@ import kotlin.reflect.KClass
  * Note that if you're done with a [IteratingEntitySystem], you must [close] it to free up processing resources.
  */
 abstract class IteratingEntitySystem(
-        world: World,
-        vararg requiredComponents: KClass<out Component>
+    world: World,
+    vararg requiredComponents: KClass<out Component>
 ) : EntitySystem(world, *requiredComponents) {
     /**
      * Process a single entity that has the required components.
      */
-    abstract fun processEntity(dt: TimeSpan, entity: Int)
+    abstract fun processEntity(dt: TimeSpan, entity: Entity)
 
-    override fun processEntities(dt: TimeSpan, entities: Set<Int>) {
+    final override fun processEntities(dt: TimeSpan, entities: Set<Entity>) {
         entities.forEach { entityIdx -> processEntity(dt, entityIdx) }
     }
 }
